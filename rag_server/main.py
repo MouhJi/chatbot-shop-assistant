@@ -1,20 +1,55 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 import uvicorn
+import os
 
-from rag.retriever import retrieve_context
-from rag.prompt_builder import build_prompt
-from rag.gemini_client import generate_answer
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains import create_retrieval_chain
 
-app = FastAPI(title="RAG Server")
+from config import CHROMA_DB_PATH, EMBEDDING_MODEL, GEMINI_API_KEY
+
+# Initialize FastAPI
+app = FastAPI(title="RAG Server (LangChain)")
+
+# --- LangChain Setup ---
+
+# 1. Embeddings
+embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+
+# 2. Vector Store & Retriever
+vectorstore = Chroma(
+    persist_directory=CHROMA_DB_PATH,
+    embedding_function=embeddings,
+    collection_name="products_rag"
+)
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+
+# 3. LLM (Gemini)
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash",
+    google_api_key=GEMINI_API_KEY,
+    temperature=0.7
+)
+
+# 4. Prompt Template
+from rag.prompt_builder import get_prompt_template
+
+# 4. Prompt Template
+prompt = get_prompt_template()
+
+# 5. Chain Construction
+combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
+
+# --- API Endpoints ---
 
 class QueryRequest(BaseModel):
     question: str
-
-class Source(BaseModel):
-    name: str
-    info: str
 
 class QueryResponse(BaseModel):
     answer: str
@@ -23,23 +58,20 @@ class QueryResponse(BaseModel):
 @app.post("/rag/query", response_model=QueryResponse)
 async def query_rag(request: QueryRequest):
     try:
-        # 1. Retrieve context
-        context_list = retrieve_context(request.question)
+        # Invoke the chain
+        response = rag_chain.invoke({"input": request.question})
         
-        # 2. Build prompt
-        prompt = build_prompt(request.question, context_list)
+        # Extract answer and sources
+        answer = response["answer"]
+        context_docs = response["context"]
         
-        # 3. Generate answer
-        answer = generate_answer(prompt)
-        
-        # 4. Format sources
         sources = [
             {
-                "name": item['metadata'].get('name'),
-                "category": item['metadata'].get('category'),
-                "price": item['metadata'].get('price')
+                "name": doc.metadata.get('name', 'Unknown'),
+                "category": doc.metadata.get('category', 'Unknown'),
+                "price": doc.metadata.get('price', '0')
             } 
-            for item in context_list
+            for doc in context_docs
         ]
         
         return {
@@ -48,6 +80,8 @@ async def query_rag(request: QueryRequest):
         }
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
