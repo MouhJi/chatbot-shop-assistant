@@ -2,6 +2,15 @@
 
 This is a full-stack e-commerce application integrated with a RAG (Retrieval-Augmented Generation) AI server to provide intelligent product inquiries. The project consists of three main components: a React frontend, a Node.js/Express backend, and a Python/FastAPI RAG server.
 
+# Demo:
+
+<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/76444064-15c8-4273-bf4f-c423cd942a60" />
+
+
+
+<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/0553307d-e599-4de0-b810-90df66794b6e" />
+
+
 ##  Project Structure
 
 - **client/**: Frontend application built with React and Vite.
