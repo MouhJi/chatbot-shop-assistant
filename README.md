@@ -1,4 +1,4 @@
-# TMDT New 2 - E-commerce & RAG Chat Application
+# E-commerce & RAG Chat Application
 
 This is a full-stack e-commerce application integrated with a RAG (Retrieval-Augmented Generation) AI server to provide intelligent product inquiries. The project consists of three main components: a React frontend, a Node.js/Express backend, and a Python/FastAPI RAG server.
 
