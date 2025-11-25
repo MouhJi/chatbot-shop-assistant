@@ -23,8 +23,8 @@ def build_index():
     
     # 3. Create/Update Vector Store
     # Optional: Clear existing DB to avoid duplicates if rebuilding from scratch
-    # if os.path.exists(CHROMA_DB_PATH):
-    #     shutil.rmtree(CHROMA_DB_PATH)
+    if os.path.exists(CHROMA_DB_PATH):
+        shutil.rmtree(CHROMA_DB_PATH)
 
     print("Creating Chroma vector store...")
     vectorstore = Chroma.from_documents(
