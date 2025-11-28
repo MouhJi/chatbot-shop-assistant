@@ -1,14 +1,23 @@
-# TMDT New 2 - E-commerce & RAG Chat Application
+# E-commerce & RAG Chat Application
 
 This is a full-stack e-commerce application integrated with a RAG (Retrieval-Augmented Generation) AI server to provide intelligent product inquiries. The project consists of three main components: a React frontend, a Node.js/Express backend, and a Python/FastAPI RAG server.
 
-## 🚀 Project Structure
+# Demo:
+
+<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/76444064-15c8-4273-bf4f-c423cd942a60" />
+
+
+
+<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/0553307d-e599-4de0-b810-90df66794b6e" />
+
+
+##  Project Structure
 
 - **client/**: Frontend application built with React and Vite.
 - **server/**: Backend REST API built with Node.js and Express.
 - **rag_server/**: AI Service for RAG functionality using FastAPI, ChromaDB, and Google Gemini.
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 ### Client
 - **Framework**: React (Vite)
@@ -30,14 +39,14 @@ This is a full-stack e-commerce application integrated with a RAG (Retrieval-Aug
 - **Embeddings**: HuggingFace (via `langchain-huggingface`)
 - **LLM**: Google Gemini (via `langchain-google-genai`)
 
-## 📋 Prerequisites
+##  Prerequisites
 
 Before you begin, ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - [Python](https://www.python.org/) (v3.9 or higher)
 - [MongoDB](https://www.mongodb.com/) (Local or Atlas connection string)
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1. Backend Server Setup
 Navigate to the `server` directory and install dependencies:
@@ -90,7 +99,7 @@ VITE_API_URL=http://localhost:5000
 VITE_RAG_API_URL=http://localhost:8000
 ```
 
-## 🚀 Running the Application
+##  Running the Application
 
 You will need to run all three services simultaneously. It is recommended to use three separate terminal windows.
 
@@ -115,7 +124,7 @@ npm run dev
 ```
 *Runs on http://localhost:5173 (default)*
 
-## ✨ Features
+##  Features
 
 - **User Authentication**: Login/Register with Email or Google.
 - **Product Management**: Browse, search, and view product details.
@@ -123,6 +132,6 @@ npm run dev
 - **Cart & Checkout**: Add items to cart and pay via VNPAY.
 - **Admin Dashboard**: Manage products, users, and view statistics.
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
